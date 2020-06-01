@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1">
+		<!-- Google Chrome Frame也可以让IE用上Chrome的引擎: -->
+		<meta name="renderer" content="webkit">
+		<!--国产浏览器高速模式-->
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="" />
+		<!-- 作者 -->
+		<meta name="revised" content="" />
+		<!-- 定义页面的最新版本 -->
+		<meta name="description" content="网站简介" />
+		<!-- 网站简介 -->
+		<meta name="keywords" content="搜索关键字，以半角英文逗号隔开" />
+		<title></title>
+
+		<!-- 公共样式 开始 -->
+		<link rel="stylesheet" type="text/css" href="../../css/base.css">
+		<link rel="stylesheet" type="text/css" href="../../css/iconfont.css">
+		<script type="text/javascript" src="../../framework/jquery-1.11.3.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+		<script type="text/javascript" src="../../layui/layui.js"></script>
+		<!-- 滚动条插件 -->
+		<link rel="stylesheet" type="text/css" href="../../css/jquery.mCustomScrollbar.css">
+		<script src="../../framework/jquery-ui-1.10.4.min.js"></script>
+		<script src="../../framework/jquery.mousewheel.min.js"></script>
+		<script src="../../framework/jquery.mCustomScrollbar.min.js"></script>
+		<script src="../../framework/cframe.js"></script><!-- 仅供所有子页面使用 -->
+		<!-- 公共样式 结束 -->
+		
+		<link rel="stylesheet" type="text/css" href="../../css/reportForm.css">
+
+	</head>
+
+	<body>
+		<div class="cBody">
+			<div class="console">
+				<form class="layui-form" action="">
+	 
+					<div class="layui-form-item">
+<!-- 						<div class="reportForm">
+							<a class="typeBut bl active" id="currentWeek" name="currentWeek">本周</a>
+							<a class="typeBut">上周</a>
+							<a class="typeBut">本月</a>
+							<a class="typeBut br">上月</a>		
+						</div> -->
+						<label class="layui-form-label">统计周月</label>
+						<div class="layui-input-inline">
+						<select name="chooseWeekAndMonth" id="chooseWeekAndMonth"  lay-filter="orderStatus">
+						    <option value="">请选择统计周月</option>
+							<option value="0" selected="selected">本周</option>
+							<option value="1">上周</option>
+							<option value="2">本月</option>
+							<option value="3">上月</option>
+						</select>
+						</div>
+						<label class="layui-form-label">日期区间</label>
+						<div class="layui-input-inline">
+				        	<input type="text" class="layui-input" id="time" name="time" placeholder=" - ">
+						</div>
+						<button class="layui-btn" lay-submit lay-filter="formDemo">检索</button>
+						<a class="layui-btn layui-btn-primary exportBut" onclick="importTheOrderData();" href="javascript:void(0);">导出</a>
+					</div>
+				</form>
+
+			</div>
+			
+			<div class="reportForm_main">
+				<div class="collectData">
+				    <div class="layui-row">
+						<div class="layui-col-md3 br">
+							<div class="layui-col-md6">
+								<div class="title">完成订单</div>
+								<div class="nums"><font id="finishCount"></font><span>笔</span></div>
+							</div>
+							<div class="layui-col-md6">
+								<div class="title">取消订单</div>
+								<div class="nums"><font id="cancelCount"></font><span>笔</span></div>
+							</div>
+						</div>
+						<div class="layui-col-md3 br">
+							<div class="layui-col-md6">
+								<div class="title" id="">新订单</div>
+								<div class="nums"><font id="cutomerCount"></font></div>
+							</div>
+							<div class="layui-col-md6">
+								<div class="title" >退预单</div>
+								<div class="nums"><font id="cancelCutomer"></font></div>
+							</div>
+						</div>
+						<div class="layui-col-md2">
+							<div class="title">完成金额</div>
+							<div class="nums"><font id="finishAmount"></font></div>
+						</div>
+						<div class="layui-col-md2">
+							<div class="title">取消金额</div>
+							<div class="nums"><font id="cancelAmount"></font></div>
+						</div>
+						<div class="layui-col-md2">
+							<div class="title">金额合计</div>
+							<div class="nums"><font id="totoalAmout"></font></div>
+						</div>
+					</div>
+				</div>
+				
+				
+				<table class="layui-table dataTable" id="reportContent" lay-skin="line">
+<!-- 					<thead>
+						<tr>
+							<th>日期（2018-03-01~2018-03-05）</th>
+							<th>订货单</th>
+							<th>退货单</th>
+							<th>订货客户数</th>
+							<th>退货客户数</th>
+							<th>订货金额</th>
+							<th>退货金额</th>
+							<th>金额小计</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>2018-03-05</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+						</tr>
+						<tr>
+							<td>2018-03-04</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+						</tr>
+						<tr>
+							<td>2018-03-03</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+						</tr>
+						<tr>
+							<td>2018-03-02</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+						</tr>
+						<tr>
+							<td>2018-03-01</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+						</tr>
+					</tbody> -->
+				</table>
+			</div>
+<script>
+	/**
+	 * 导出订单数据 
+	 **/
+   function  importTheOrderData(){
+	console.log("导出数据");
+	var orderDate = $("#chooseWeekAndMonth").val();
+	var time = $("#time").val();
+	var cutomerCount =  $("#cutomerCount").html();
+	var cancelCutomer = $("#cancelCutomer").html();
+	var finishCount = $("#finishCount").html();
+	var finishAmount = $("#finishAmount").html();
+	var cancelCount = $("#cancelCount").html();
+	var cancelAmount = $("#cancelAmount").html();
+	console.log("cutomerCount = "+cutomerCount+"cancelCutomer = "+cancelCutomer+"finishCount = "+finishCount+" finishAmount = "+finishAmount);
+	// var allData = {
+	// 	orderDate:orderDate,
+	// 	time:time,
+	// 	cutomerCount:cutomerCount,
+	// 	cancelCutomer:cancelCutomer,
+	// 	finishCount:finishCount,
+	// 	finishAmount:finishAmount,
+	// 	cancelCount:cancelCount,
+	// 	cancelAmount:cancelAmount
+	// };
+	window.location.href="http://localhost:8009/hc/aOrder/importTheOrderData?orderDate="+orderDate+"&time="+time+"&cutomerCount="+cutomerCount+"&cancelCutomer="+cancelCutomer+"&finishCount="+finishCount+"&finishAmount="+finishAmount+"&cancelCount="+cancelCount+"&cancelAmount="+cancelAmount;
+	// $.ajax({
+	// 	type:"POST",
+	// 	url:"http://localhost:8009/hc/aOrder/importTheOrderData/",
+	// 	contentType:"application/json",
+	// 	dataType:"json",
+	// 	data:JSON.stringify(allData),
+	// 	success:function(res){
+	// 	console.log(res);
+	// 	  if(res.code == 0){
+	// 		  console.log("成功");
+	// 	  }
+	// 	}			
+	// });
+	   }
+	layui.use(['form','laydate', 'layer','table'], function() {
+		var form = layui.form;
+		var laydate = layui.laydate;
+			layer = layui.layer;
+		var table = layui.table;
+
+		//监听提交
+		form.on('submit(formDemo)', function(data) {
+			console.log(JSON.stringify(data.field));
+			var queryPo = data.field;
+			console.log("queryPo"+queryPo.time);
+			// 提交按钮异步调用统计方法
+			getWeekAndMonth(queryPo.chooseWeekAndMonth,queryPo.time);
+			console.log("月份状态"+queryPo.chooseWeekAndMonth);
+				table.reload('reportReload',{
+					url: 'http://localhost:8009/hc/aOrder/selectTotalPages',
+					page:{
+						curr: 1 //从第一页开始
+					},
+					where:{
+						orderDate:queryPo.chooseWeekAndMonth,
+						time:queryPo.time	
+					},
+					parseData:function(res){
+						console.log("进来...",res)
+						return{
+							"code":res.code,
+							"data":res.data.list,
+							"count":res.data.total
+						}
+					}
+					
+				});
+			return false;
+		});
+		
+		laydate.render({
+			elem: '#time' 
+			,range: true
+		});
+		//select监听
+		form.on('select(reportType)', function(data){
+		  console.log(data.elem); //得到select原始DOM对象
+		  console.log(data.value); //得到被选中的值
+		  console.log(data.othis); //得到美化后的DOM对象
+		});
+		// 订单统计列表
+		table.render({
+				elem:'#reportContent',
+				height: 400,
+				url:'http://localhost:8009/hc/aOrder/selectTotalPages',//数据接口
+				parseData:function(res){
+					console.log("进来...",res)
+					return{
+						"code":res.code,
+						"data":res.data.list,
+						"count":res.data.total
+					}
+				},
+				id:'reportReload',
+				// title:'服务列表',
+				page: true,//开启分页
+				limits:[10],
+				limit:10,
+				cols:[[
+				   {field:'orderDate',title:'日期',width:250,sort: true,align:'center',
+				   templet:'<div>{{layui.util.toDateString(d.orderDate, "yyyy-MM-dd")}}</div>'
+				   },
+				   {field:'orderId',title:'订单编号',width:250,sort: true,align:'center'},
+				   {field:'nickName',title:'用户姓名',width:250,align:'center'},
+				   {field:'orderStatus',title:'订单状态',width:250,align:'center',
+				   templet:function(res){
+					   if(res.orderStatus == 0){
+						   return '<span>新订单</span>'
+					   }
+					   if(res.orderStatus == 1){
+						   return '<span>完成订单</span>'
+					   }
+					   if(res.orderStatus == 2){
+						   return '<span>取消订单</span>'
+					   }
+				   }
+				   },
+				   {field:'orderAmount',title:'金额小计',width:250,align:'center'}
+				]]
+			});
+	});
+	
+	//异步加载统计
+	$(document).ready(function () { 
+		console.log("加载统计...");
+		//获取选中项的value
+		var orderDate = $("#chooseWeekAndMonth").val();
+		var time = $("#time").val();
+		// console.log("select 选中的值-----"+orderDate);
+		console.log("time"+time);
+		getWeekAndMonth(orderDate,time);
+		// 按钮点击
+	});
+	
+	//调用 统计方法
+	function getWeekAndMonth(orderDate,time){
+		console.log("调用统计方法...")
+		$.ajax({
+			type:"GET",
+			url:"http://localhost:8009/hc/aOrder/selectOrderCount/",
+		    contentType:"application/json",
+			dataType:"json",
+			data:{'orderDate':orderDate,'time':time},
+			success:function(res){
+			console.log(res);
+			  if(res.code == 0){
+				  console.log("成功");
+				  $("#cutomerCount").html(res.data.cutomerCount);
+				  $("#cancelCutomer").html(res.data.cancelCount);
+				  $("#finishCount").html(res.data.finishCount);
+				  $("#finishAmount").html(res.data.finishAmount);
+				  $("#cancelCount").html(res.data.cancelCount);
+				  $("#cancelAmount").html(res.data.cancelAmount);
+				  $("#totoalAmout").html(res.data.finishAmount - res.data.cancelAmount);
+			  }
+			}			
+		});
+	}
+</script>	
+		</div>
+	</body>
+
+</html>

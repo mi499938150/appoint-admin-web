@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>订单列表</title>
+<!-- 公共样式 开始 -->
+		<link rel="stylesheet" type="text/css" href="../../css/base.css">
+		<link rel="stylesheet" type="text/css" href="../../css/iconfont.css">
+		<script type="text/javascript" src="../../framework/jquery-2.1.4.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+		<script type="text/javascript" src="../../layui/layui.js"></script>
+<!-- 公共样式 结束 -->	
+	</head>
+	<body>
+		<div class="layui-row" id="EditOrder" style="display:none;">
+				    <div class="layui-col-md10">
+					<form id="addForm" class="layui-form" action="">
+						<div class="layui-form-item">
+							<label class="layui-form-label">编号ID</label>
+							<div class="layui-input-block">
+							     <input type="text" readonly="readonly" id="orderId" name="orderId" autocomplete="off" class="layui-input" />
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">用户编号</label>
+							<div class="layui-input-block">
+								<input type="text" readonly="readonly" id="openId" name="openId" required lay-verify="required" autocomplete="off" class="layui-input">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">姓名</label>
+							<div class="layui-input-block">
+								<input type="text" readonly="readonly" id="nickName" name="nickName" required lay-verify="required|String" autocomplete="off" class="layui-input">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">支付状态</label>
+							<div class="layui-input-block">
+								<input type="text" readonly="readonly" id="payStatus" name="payStatus" required lay-verify="required|number" autocomplete="off" class="layui-input">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">支付方式</label>
+							<div class="layui-input-block">
+								<input type="text" readonly="readonly" id="paymentType" name="paymentType" required lay-verify="required|number" autocomplete="off" class="layui-input">
+							</div>
+						</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">订单状态</label>
+						<div class="layui-input-block">
+							<input type="text" readonly="readonly" id="orderStatus" name="orderStatus" required lay-verify="required|number" autocomplete="off" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">状态操作</label>
+						<div class="layui-input-block">
+							<div id="show"></div>
+					<!-- 	   <button type="button" id="finishBtn" class="layui-btn layui-btn-normal ">完成订单</button>
+						   <button type="button" id="cancelBtn" class="layui-btn layui-btn-danger">取消订单</button> -->
+						</div>
+					</div>
+					</form>
+					</div>
+				</div>
+		<div class="layui-row" id="DetailOrder" style="display:none;">
+				    <div class="layui-col-md10">
+					<form id="addForm" class="layui-form" action="">
+						<div class="layui-form-item">
+							<label class="layui-form-label">编号ID</label>
+							<div class="layui-input-block">
+							     <input type="text" readonly="readonly" id="detailId" name="detailId" autocomplete="off" class="layui-input" />
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">订单编号</label>
+							<div class="layui-input-block">
+								<input type="text" readonly="readonly" id="dorderId" name="orderId" required lay-verify="required" autocomplete="off" class="layui-input">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">预约编号</label>
+							<div class="layui-input-block">
+								<input type="text" readonly="readonly" id="appointId" name="appointId" required lay-verify="required|number" autocomplete="off" class="layui-input">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">预约名称</label>
+							<div class="layui-input-block">
+								<input type="text" readonly="readonly" id="appointName" name="appointName" required lay-verify="required|number" autocomplete="off" class="layui-input">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">服务价格</label>
+							<div class="layui-input-block">
+								<input type="text" readonly="readonly" id="appointPrice" name="appointPrice" required lay-verify="required|number" autocomplete="off" class="layui-input">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">数量</label>
+							<div class="layui-input-block">
+								<input type="text" readonly="readonly" id="appointQuantity" name="appointQuantity" required lay-verify="required|number" autocomplete="off" class="layui-input">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">预约日期</label>
+							<div class="layui-input-block">
+								<input type="text"  readonly="readonly" id="appointTime" name="appointTime" required lay-verify="required|number" autocomplete="off" class="layui-input">
+							</div>
+						</div>
+					</form>
+					</div>
+				</div>
+		<div class="cBody">
+			<div class="console">
+				<form class="layui-form" action="">
+					<div class="layui-form-item">
+						<div class="layui-input-inline">
+							<input type="text" name="nickName"  placeholder="输入姓名" autocomplete="off" class="layui-input">
+						</div>
+						<div class="layui-input-inline">
+		                    <select name="orderStatus"  lay-filter="orderStatus">
+		                        <option value="">请选择订单状态</option>
+								<option value="0">新订单</option>
+								<option value="1">完结</option>
+								<option value="2">取消</option>
+		                    </select>
+		                </div>
+		             <!--   <div class="layui-input-inline">
+		                <input type="text" class="layui-input" id="time" name="appointTime" placeholder="请选择日期时间">
+		                </div> -->
+						<button class="layui-btn" lay-submit lay-filter="formDemo">检索</button>
+						<!-- <a class="layui-btn">导入商品</a> -->
+					</div>
+				</form>
+			</div>
+			
+			<table class="layui-hide" id="tableOrder" lay-filter="order"> 
+			</table>
+				<script type="text/html" id="toolbarDemo">
+						    <div class="layui-btn-container">
+						     	<button class="layui-btn layui-btn-sm layui-btn-danger" lay-submit data-type="getCheckData" lay-filter="batchDel">批量删除</button>
+						    </div>
+						</script>				
+						<script type="text/html" id="barDemo">
+						  <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+						  <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+						  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+						</script>	
+		</div>
+<script type="text/javascript">
+		layui.use(['form','laydate','table'], function() {
+			var form = layui.form;
+			var laydate = layui.laydate;
+			var table = layui.table;
+			// 订单完成操作
+			form.on('submit(submitFinsh)',function(data){
+				console.log("订单完成操作");
+				layer.msg(JSON.stringify(data.field));
+			$.ajax({
+				type:"POST",
+				url:"http://localhost:8009/hc/aOrder/finishOrder/",
+				contentType:"application/json",
+				data:JSON.stringify(data.field),
+				dataType:"json",
+				success:function(res){
+				console.log("更新结果"+res.data);
+			  if(res.code == 0){	  	  
+				layer.msg("订单完成成功",{icon: 1, time: 800, shade: 0.1});
+						  setTimeout(function(){
+							layer.closeAll();//关闭所有的弹出层
+							table.reload('OrderReload',{
+							  page:{
+								  curr:1
+							  }
+							});           
+						 }, 800);
+					  }
+					}			
+				});
+			});
+			// 订单取消操作
+			form.on('submit(submitCancel)',function(data){
+					console.log("订单取消操作");
+				layer.msg(JSON.stringify(data.field));
+			$.ajax({
+				type:"POST",
+				url:"http://localhost:8009/hc/aOrder/cancelOrder/",
+				contentType:"application/json",
+				data:JSON.stringify(data.field),
+				dataType:"json",
+				success:function(res){
+				console.log("更新结果"+res.data);
+			  if(res.code == 0){	  	  
+				layer.msg("订单完成成功",{icon: 1, time: 800, shade: 0.1});
+						  setTimeout(function(){
+							layer.closeAll();//关闭所有的弹出层
+							table.reload('OrderReload',{
+							  page:{
+								  curr:1
+							  }
+							});           
+						 }, 800);
+					  }
+					}			
+				});
+			});			
+			
+			//监听提交
+			form.on('submit(formDemo)', function(data) {
+				// layer.msg(JSON.stringify(data.field));
+				var queryPo = data.field;
+				console.log("订单状态"+queryPo.orderStatus);
+					table.reload('OrderReload',{
+						url: 'http://localhost:8009/hc/aOrder/pagesAOrders',
+						page:{
+							curr: 1 //从第一页开始
+						},
+						where:{
+							nickName: queryPo.nickName,
+							orderStatus: queryPo.orderStatus
+						},
+						parseData:function(res){
+							console.log("进来...",res)
+							return{
+								"code":res.code,
+								"data":res.data.list,
+								"count":res.data.total
+							}
+						}
+						
+					});
+				return false;
+			});
+			// 时间
+			laydate.render({
+				elem: '#time'
+				,type: 'datetime'
+				,done: function(value, date){
+				  setCountdown(date.year, date.month - 1, date.date, date.hours, date.minutes, date.seconds);
+				}
+			});
+			//table
+			table.render({
+				elem:'#tableOrder',
+				height: 500,
+				url:'http://localhost:8009/hc/aOrder/pagesAOrders',//数据接口
+				parseData:function(res){
+					console.log("进来...",res)
+					return{
+						"code":res.code,
+						"data":res.data.list,
+						"count":res.data.total
+					}
+				},
+				toolbar:'#toolbarDemo',
+				id:'OrderReload',
+				title:'预约列表',
+				page: true,//开启分页
+				limits:[10],
+				limit:10,
+				cols:[[
+				{type: 'checkbox',checkbox:true,fixed: 'left'},
+				{field:'orderId',title:'编号ID',width:140,sort: true},
+				{field:'nickName',title:'姓名',width:150,sort: true},
+				{field:'orderStatus',title:'订单状态',width:100},
+				{field:'payStatus',title:'支付状态',width:100},
+				// {field:'appointDesc',title:'描述',width:100},				   
+				{field:'paymentType',title:'支付类型',width:90},
+				{field:'orderAmount',title:'金额',width:100},
+				{field:'createTime',title:'创建时间',width:160},
+				{field:'updateTime',title:'修改时间',width:160},
+				{title:'操作',width:180,align:'center',toolbar: '#barDemo'}
+				]]
+			});
+				//监听行工具事件
+				  table.on('tool(order)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+				    var id = obj.data.orderId; //获得当前行数据
+					console.log("id"+id);
+					layEvent = obj.event; //获得 lay-event 对应的值
+					if(layEvent === 'del'){
+				      layer.confirm('真的删除行么', function(index){
+						obj.del();
+						$.ajax({
+							type:"DELETE",
+							url:"http://localhost:8009/hc/aOrder/deleteOrder/"+id,
+						    contentType:"application/json",
+							dataType:"json",
+							success:function(res){
+							  console.log("删除结果"+res.code);
+							  if(res.code == 0){	  
+								  layer.close(index);
+								  layer.msg("删除成功",{icon: 1, time: 1000, shade: 0.1});
+								  table.reload('OrderReload',{
+									  page:{
+										  curr:1
+									  }
+								  })
+							  }
+							}			
+						})  					 
+				      });
+					  //编辑操作
+				    } else if(layEvent === 'detail'){
+				      // layer.msg('编辑操作'+JSON.stringify(obj.data));
+					  layui.use('layer', function() {
+						var data = obj.data;
+						console.log("orderId"+data.orderDetailList.orderId);
+						$("#detailId").val(data.orderDetailList.detailId);
+						$('#dorderId').val(data.orderDetailList.orderId);
+						$('#appointId').val(data.orderDetailList.appointId);
+						$('#appointName').val(data.orderDetailList.appointName);
+						$('#appointPrice').val(data.orderDetailList.appointPrice);
+						$('#appointQuantity').val(data.orderDetailList.appointQuantity);
+						$('#appointTime').val(data.orderDetailList.appointTime);
+					  	//iframe层-父子操作
+					  	updateFrame = layer.open({
+					  		title: "订单详情信息",
+					  		type: 1,
+					  		area: ['520px', '540px'],
+					  		scrollbar: false,	//默认：true,默认允许浏览器滚动，如果设定scrollbar: false，则屏蔽
+					  		maxmin: true,
+					  		content: $("#DetailOrder")
+					  	});
+					  });	
+				    }else if(layEvent === 'edit'){
+					  layui.use('layer', function() {
+					  	var layer = layui.layer;	  	
+						var data = obj.data;
+						$("#orderId").val(data.orderId);
+						$("#openId").val(data.openId);
+						$("#nickName").val(data.nickName);
+						$("#orderStatus").val(data.orderStatus);
+						$("#paymentType").val(data.paymentType);
+						$("#payStatus").val(data.payStatus);
+						$("#orderAmount").val(data.orderAmount);
+						// 1. 判断订单完成和、取消按钮为禁用
+						if(data.orderStatus == 1 || data.orderStatus == 2){
+							var isBtn  = true;
+							disabledAddBtn(isBtn);
+						// 2. 否则为启用	
+						}else{
+							var isBtn  = false;
+							disabledAddBtn(isBtn);
+						}
+						console.log("isOrder"+data.orderStatus);
+					    
+						//iframe层-父子操作
+					  	updateFrame = layer.open({
+					  		title: "订单信息编辑",
+					  		type: 1,
+					  		area: ['520px', '540px'],
+					  		scrollbar: false,	//默认：true,默认允许浏览器滚动，如果设定scrollbar: false，则屏蔽
+					  		maxmin: true,
+					  		content: $("#EditOrder")
+					  	});
+					  });	
+				    }
+					// 判断按钮为禁用和启用
+					function disabledAddBtn(isDisabled){
+					var disabled = isDisabled ? 'layui-btn-disabled' : ''; //isDisabled 为 true 时则禁用，反之启用
+					console.log("layui"+disabled);
+					var btn;
+					if(disabled){
+						btn = "<button type='button' class='layui-btn "+disabled+"'>完成订单</button><button type='button' class='layui-btn "+disabled+"'>取消订单</button>";
+					 }else{
+						btn = "<button type='button' class='layui-btn layui-btn-normal' lay-submit lay-filter='submitFinsh'>完成订单</button><button type='button' class='layui-btn layui-btn-danger' lay-submit lay-filter='submitCancel'>取消订单</button>";
+					 }
+						$('#show').html(btn);
+	
+				}	
+				  });
+				// 更新操作  
+		form.on('submit(serviceUpdate)', function(data) {
+				// layer.msg(JSON.stringify(data.field));
+			$.ajax({
+				type:"POST",
+				url:"http://localhost:8009/hc/service/updateService/",
+				contentType:"application/json",
+				data:JSON.stringify(data.field),
+				dataType:"json",
+				success:function(res){
+				console.log("更新结果"+res.data);
+			  if(res.data == 1){	  	  
+				layer.msg("更新",{icon: 1, time: 800, shade: 0.1});
+						  setTimeout(function(){
+							layer.closeAll();//关闭所有的弹出层
+							table.reload('OrderReload',{
+							  page:{
+								  curr:1
+							  }
+							});           
+						 }, 800);
+					  }
+					}			
+				});
+				return false;
+			});
+				// 批量删除
+				// 1.获取选中数据
+					function getCheckData() {
+						var checkStatus = table.checkStatus('OrderReload')
+						var data = checkStatus.data;
+						// layer.msg(JSON.stringify(data));
+						console.log("批量删除:"+JSON.stringify(data));
+						// console.log(JSON.stringify(data[0].itemId));
+						var orderIds = "";
+						if(data.length >0){
+							for(var i in data){
+								orderIds+=data[i].orderId+",";
+							}
+						}
+						return orderIds
+					}
+				// 2. 提交批量删除	
+				form.on('submit(batchDel)',function(data){
+					var orderIds = getCheckData();
+					if(orderIds.length == 0){
+						layer.msg("请先选择批量删除的内容", {
+								time: 2000,
+								icon: 5
+							});
+							return;
+					}
+					// 3. 是否要删除所有内容
+					layer.confirm('确认删除所有选中的内容吗?',function(index){
+						console.log("得到批量数据ID"+JSON.stringify(orderIds));
+						$.ajax({
+							type:"POST",
+							url:"http://localhost:8009/hc/aOrder/batchDelAOrder/"+orderIds,
+						    contentType:"application/json",
+							// data:JSON.stringify(orderIds),
+							dataType:"json",
+							success:function(res){
+							  console.log("批量删除结果"+res.data);
+							  if(res.code == 0 ){
+								  layer.close(index);
+								  layer.msg("批量删除成功",{icon: 1, time: 1000, shade: 0.1});
+								  table.reload('OrderReload',{
+									  page:{
+										  curr:1
+									  }
+								  })
+							}
+						  }
+						});
+					})
+				});	
+		});	
+			</script>
+	</body>
+</html>

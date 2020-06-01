@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1">
+		<!-- Google Chrome Frame也可以让IE用上Chrome的引擎: -->
+		<meta name="renderer" content="webkit">
+		<!--国产浏览器高速模式-->
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="穷在闹市" />
+		<!-- 作者 -->
+		<meta name="revised" content="穷在闹市.v3, 2019/05/01" />
+		<!-- 定义页面的最新版本 -->
+		<meta name="description" content="网站简介" />
+		<!-- 网站简介 -->
+		<meta name="keywords" content="搜索关键字，以半角英文逗号隔开" />
+		<title>穷在闹市出品</title>
+
+		<!-- 公共样式 开始 -->
+		<link rel="stylesheet" type="text/css" href="../../css/base.css">
+		<link rel="stylesheet" type="text/css" href="../../css/iconfont.css">
+		<script type="text/javascript" src="../../framework/jquery-1.11.3.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="../../layui/css/layui.css">
+		<script type="text/javascript" src="../../layui/layui.js"></script>
+		<!-- 滚动条插件 -->
+		<link rel="stylesheet" type="text/css" href="../../css/jquery.mCustomScrollbar.css">
+		<script src="../../framework/jquery-ui-1.10.4.min.js"></script>
+		<script src="../../framework/jquery.mousewheel.min.js"></script>
+		<script src="../../framework/jquery.mCustomScrollbar.min.js"></script>
+		<script src="../../framework/cframe.js"></script><!-- 仅供所有子页面使用 -->
+		<!-- 公共样式 结束 -->
+
+		<!-- vue.js-->
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+		<style>
+			.layui-table img {
+			    max-width: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="layui-row" id="EditAppoint" style="display:none;">
+		    <div class="layui-col-md10">
+			<form id="addForm" class="layui-form" action="">
+				<div class="layui-form-item">
+					<label class="layui-form-label">编号ID</label>
+					<div class="layui-input-block">
+					     <input type="text" readonly="readonly" id="appointId" name="appointId" autocomplete="off" class="layui-input" />
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">预约名称</label>
+					<div class="layui-input-block">
+						<input type="text" id="appointName" name="appointName" required lay-verify="required" autocomplete="off" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">参考价格</label>
+					<div class="layui-input-block">
+						<input type="text" id="appointPrice" name="appointPrice" required lay-verify="required|number" autocomplete="off" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">日期</label>
+					<div class="layui-input-block">
+							<input type="text" id="appointTime" class="layui-input" id="time" name="appointTime" placeholder="请选择日期时间">
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">分类</label>
+					<div class="layui-input-block">
+						 <select name="categoryType" id="categoryType" lay-verify="required" lay-filter="test" id="select">
+							<option value="">请选择一个分类</option>
+							<option value="1">热门</option>
+			 				<option value="2">大众</option>
+					   	</select>
+					</div>
+				</div>
+<!-- 				<div class="layui-form-item">
+					<label class="layui-form-label">描述</label>
+					<div class="layui-input-block">
+						<textarea name="appointDesc" class="layui-textarea"></textarea>
+					</div>
+				</div> -->
+				<div class="layui-form-item">
+					<label class="layui-form-label">预约状态</label>
+					<div class="layui-input-block">
+						<input type="radio"  name="statusType" value="0" title="已预约"  >
+						<input type="radio" name="statusType" value="1" title="未预约"  >
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label class="layui-form-label">状态</label>
+					<div class="layui-input-block">
+						<input type="radio" name="appointStatus" value="0" title="启用">
+						<input type="radio" name="appointStatus" value="1" title="禁用" >
+					</div>
+				</div>
+				
+				<div class="layui-form-item">
+					<div class="layui-input-block">
+						<button class="layui-btn" lay-submit lay-filter="serviceUpdate">立即提交</button>
+						<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+					</div>
+				</div>
+			</form>
+			</div>
+		</div>
+		<div class="cBody">
+			<div class="console">
+				<form class="layui-form" action="">
+					<div class="layui-form-item">
+						<div class="layui-input-inline">
+							<input type="text" name="appointName" required lay-verify="required" placeholder="输入商品名称" autocomplete="off" class="layui-input">
+						</div>
+						<div class="layui-input-inline">
+		                    <select name="statusType" id="statusType" lay-filter="statusType">
+		                        <option value="0">请选择预约状态</option>
+								<option value="1">已预约</option>
+								<option value="2">未预约</option>
+		                    </select>
+		                </div>
+		                <div class="layui-input-inline">
+		                <input type="text" class="layui-input" id="time" name="appointTime" placeholder="请选择日期时间">
+		                </div>
+						<button class="layui-btn" lay-submit lay-filter="formDemo">检索</button>
+						<a class="layui-btn">导入商品</a>
+					</div>
+				</form>
+			</div>
+			
+			<table class="layui-hide" id="tableAppoint" lay-filter="service"> 
+			</table>
+				<script type="text/html" id="toolbarDemo">
+						    <div class="layui-btn-container">
+						     	<button class="layui-btn layui-btn-sm layui-btn-danger" lay-submit data-type="getCheckData" lay-filter="batchDel">批量删除</button>
+						    </div>
+						</script>				
+						<script type="text/html" id="barDemo">
+						  <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+						  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+						</script>
+		
+		</div>
+<script type="text/javascript">
+		layui.use(['form','laydate','table'], function() {
+			var form = layui.form;
+			var laydate = layui.laydate;
+			var table = layui.table;
+			//监听提交
+			form.on('submit(formDemo)', function(data) {
+				// layer.msg(JSON.stringify(data.field));
+				var queryPo = data.field;
+					table.reload('AppointReload',{
+						url: 'http://localhost:8009/hc/service/pagesServices',
+						page:{
+							curr: 1 //从第一页开始
+						},
+						where:{
+							appointName: queryPo.appointName,
+							appointTime: queryPo.appointTime,
+							statusType: queryPo.statusType
+						},
+						parseData:function(res){
+							console.log("进来...",res)
+							return{
+								"code":res.code,
+								"data":res.data.list,
+								"count":res.data.total
+							}
+						}
+						
+					});
+				return false;
+			});
+			// 时间
+			laydate.render({
+				elem: '#time'
+				,type: 'datetime'
+				,done: function(value, date){
+				  setCountdown(date.year, date.month - 1, date.date, date.hours, date.minutes, date.seconds);
+				}
+			});
+			//table
+			table.render({
+				elem:'#tableAppoint',
+				height: 500,
+				url:'http://localhost:8009/hc/service/pagesServices',//数据接口
+				parseData:function(res){
+					console.log("进来...",res)
+					return{
+						"code":res.code,
+						"data":res.data.list,
+						"count":res.data.total
+					}
+				},
+				toolbar:'#toolbarDemo',
+				id:'AppointReload',
+				title:'预约列表',
+				page: true,//开启分页
+				limits:[10],
+				limit:10,
+				cols:[[
+					{type: 'checkbox',checkbox:true,fixed: 'left'},
+				   {field:'appointId',title:'编号ID',width:140,sort: true},
+				   {field:'appointName',title:'预约名称',width:100,sort: true},
+				   {field:'appointPrice',title:'价格',width:80},
+				   {field:'appointTime',title:'日期时间',width:160},
+				   // {field:'appointDesc',title:'描述',width:100},				   
+				   {field:'statusType',title:'预约状态',width:90},
+				   {field:'appointStatus',title:'启用状态',width:90},
+				   {field:'categoryType',title:'类型',width:80},
+				   {field:'createTime',title:'创建时间',width:160},
+				   {field:'updateTime',title:'修改时间',width:160},
+				   {title:'操作',width:150,align:'center',toolbar: '#barDemo'}
+				]]
+			});
+				//监听行工具事件
+				  table.on('tool(service)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+				    var id = obj.data.appointId; //获得当前行数据
+					console.log("id"+id);
+					layEvent = obj.event; //获得 lay-event 对应的值
+					if(layEvent === 'del'){
+				      layer.confirm('真的删除行么', function(index){
+						obj.del();
+						$.ajax({
+							type:"DELETE",
+							url:"http://localhost:8009/hc/service/deletetService/"+id,
+						    contentType:"application/json",
+							dataType:"json",
+							success:function(res){
+							  console.log("删除结果"+res.data);
+							  if(res.data == 1){	  
+								  layer.close(index);
+								  layer.msg("删除成功",{icon: 1, time: 1000, shade: 0.1});
+								  table.reload('AppointReload',{
+									  page:{
+										  curr:1
+									  }
+								  })
+							  }
+							}			
+						})  					 
+				      });
+					  //编辑操作
+				    } else if(layEvent === 'edit'){
+				      // layer.msg('编辑操作'+JSON.stringify(obj.data));
+					  layui.use('layer', function() {
+						var data = obj.data;					 
+						$("#appointId").val(data.appointId);
+						$("#appointName").val(data.appointName);
+						$("#appointPrice").val(data.appointPrice);
+						$("#appointTime").val(data.appointTime);
+						// 判断预约状态 0已经预约 1未预约
+						var statusType = data.statusType;
+						if(statusType !=null){
+							var TName = "statusType";
+							justStatus(statusType,TName);
+							console.log("判断预约状态"+statusType);
+						}			
+						// 判断状态  0 启用 1禁用
+						var appointStatus = data.appointStatus;
+						if(appointStatus !=null){
+							var AName = "appointStatus";
+							justStatus(appointStatus,AName);
+							console.log("判断启用状态"+appointStatus);
+						}
+						// 选择框  1热门 2大众
+						var categoryType = data.categoryType;
+						if(categoryType !=null){
+						 $("#categoryType option").each(function(i,item){
+							 console.log("this:"+$(item).val());
+							 console.log("categoryType:"+categoryType);
+							 console.log("is:"+$(item).val() == categoryType);
+							if($(item).val() == categoryType){
+								 $(item).attr("selected",true);
+								 form.render();	 
+							} 
+						 });	 
+						   // console.log("判断分类"+categoryType);
+						}
+					  	//iframe层-父子操作
+					  	updateFrame = layer.open({
+					  		title: "服务信息修改",
+					  		type: 1,
+					  		area: ['520px', '540px'],
+					  		scrollbar: false,	//默认：true,默认允许浏览器滚动，如果设定scrollbar: false，则屏蔽
+					  		maxmin: true,
+					  		content: $("#EditAppoint")
+					  	});
+					  });	
+					  //判断预约状态和启用状态
+					  function justStatus(status,name){
+						  $('[name="'+name+'"]').each(function(i,item){
+						  	console.log("i="+i+"item"+item)
+						  	if($(item).val()== status){
+								console.log("val"+status);
+						  		$(item).prop('checked',true);
+						  		console.log($(item));
+						  			form.render();	 
+						  	} 
+						  });
+					  }
+				    }
+				  });
+				// 更新操作  
+		form.on('submit(serviceUpdate)', function(data) {
+				// layer.msg(JSON.stringify(data.field));
+			$.ajax({
+				type:"POST",
+				url:"http://localhost:8009/hc/service/updateService/",
+				contentType:"application/json",
+				data:JSON.stringify(data.field),
+				dataType:"json",
+				success:function(res){
+				console.log("更新结果"+res.data);
+			  if(res.data == 1){	  	  
+				layer.msg("更新",{icon: 1, time: 800, shade: 0.1});
+						  setTimeout(function(){
+							layer.closeAll();//关闭所有的弹出层
+							table.reload('AppointReload',{
+							  page:{
+								  curr:1
+							  }
+							});           
+						 }, 800);
+					  }
+					}			
+				});
+				return false;
+			});
+				// 批量删除
+				// 1.获取选中数据
+					function getCheckData() {
+						var checkStatus = table.checkStatus('AppointReload')
+						var data = checkStatus.data;
+						// layer.msg(JSON.stringify(data));
+						console.log("批量删除:"+JSON.stringify(data));
+						// console.log(JSON.stringify(data[0].itemId));
+						var appointIds = "";
+						if(data.length >0){
+							for(var i in data){
+								appointIds+=data[i].appointId+",";
+							}
+						}
+						return appointIds
+					}
+				// 2. 提交批量删除	
+				form.on('submit(batchDel)',function(data){
+					var appointIds = getCheckData();
+					if(appointIds.length == 0){
+						layer.msg("请先选择批量删除的内容", {
+								time: 2000,
+								icon: 5
+							});
+							return;
+					}
+					// 3. 是否要删除所有内容
+					layer.confirm('确认删除所有选中的内容吗?',function(index){
+						console.log("得到批量数据ID"+JSON.stringify(appointIds));
+						$.ajax({
+							type:"POST",
+							url:"http://localhost:8009/hc/service/batchDelService/"+appointIds,
+						    contentType:"application/json",
+							// data:JSON.stringify(appointIds),
+							dataType:"json",
+							success:function(res){
+							  console.log("批量删除结果"+res.data);
+							  
+								  layer.close(index);
+								  layer.msg("批量删除成功",{icon: 1, time: 1000, shade: 0.1});
+								  table.reload('AppointReload',{
+									  page:{
+										  curr:1
+									  }
+								  })
+							}			
+						});
+					})
+				});	
+		});	
+			</script>
+	</body>
+</html>
